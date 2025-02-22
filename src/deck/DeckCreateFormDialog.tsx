@@ -17,12 +17,13 @@ import {
 import { Input } from "@/src/shadcn/components/ui/input"
 import { Textarea } from "@/src/shadcn/components/ui/textarea"
 import { Label } from "@/src/shadcn/components/ui/label"
-import { useState } from "react"
+import { ChangeEvent, useRef, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/src/category/api"
 import { getFoldersAllKey, getMyDirectories } from "@/src/folder/api"
 import { createNewDeck, queryKey } from "@/src/deck/api"
 import { getQueryClient } from "@/src/shared/get-query-client"
+import { Upload, X } from "lucide-react"
 
 export function DeckCreateFormDialog({
   open,
@@ -39,6 +40,10 @@ export function DeckCreateFormDialog({
   const [selectDirectoryId, setSelectDirectory] = useState(
     directories.length > 0 ? directories[0].id : 0,
   )
+  const [file, setFile] = useState<File | null>(null)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
   const createDeckMutation = useMutation({
     mutationKey: queryKey,
     mutationFn: createNewDeck,
@@ -53,6 +58,19 @@ export function DeckCreateFormDialog({
       window.alert(error.message)
     },
   })
+
+  const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0])
+    }
+  }
+
+  const removeFile = () => {
+    setFile(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
+  }
 
   const submitCreateDeck = () => {
     createDeckMutation.mutate({
@@ -134,6 +152,50 @@ export function DeckCreateFormDialog({
               content={deckDescription}
               onChange={(e) => setDeckDescription(e.target.value)}
             />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="file-upload">배경 이미지</Label>
+            <div className="flex items-center gap-2">
+              <Input
+                id="file-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleChangeFile}
+                className="hidden"
+                ref={fileInputRef}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                파일 선택
+              </Button>
+              {file && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={removeFile}
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              )}
+            </div>
+            {file && (
+              <div className="mt-2">
+                <p className="text-sm text-muted-foreground">{file.name}</p>
+                {file.type.startsWith("image/") && (
+                  <img
+                    src={URL.createObjectURL(file) || "/placeholder.svg"}
+                    alt="Preview"
+                    className="mt-2 max-w-full h-auto max-h-[200px] rounded-md"
+                  />
+                )}
+              </div>
+            )}
           </div>
           <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Button
