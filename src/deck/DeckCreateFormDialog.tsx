@@ -74,11 +74,14 @@ export function DeckCreateFormDialog({
 
   const submitCreateDeck = () => {
     createDeckMutation.mutate({
-      folderId: selectDirectoryId,
-      categoryId: selectCategoryId,
-      name: deckTitle,
-      description: deckDescription,
-      isShared: false,
+      request: {
+        folderId: selectDirectoryId,
+        categoryId: selectCategoryId,
+        name: deckTitle,
+        description: deckDescription,
+        isShared: false,
+      },
+      file: file,
     })
   }
 
