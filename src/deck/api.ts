@@ -26,13 +26,9 @@ export function createNewDeck(
   createRequest: DeckCreateWithFileReq,
 ): Promise<void> {
   const formData = new FormData()
-  const jsonBlob = new Blob([JSON.stringify(createRequest.request)], {
-    type: "application/json",
-  })
-  formData.append("request", jsonBlob)
 
-  if (createRequest.file !== null) {
-    formData.append("file", createRequest.file!)
-  }
+  formData.append("request", JSON.stringify(createRequest.request))
+  formData.append("file", createRequest.file!)
+
   return postFetch(REQ_DECK, formData)
 }
