@@ -49,8 +49,9 @@ export function DeckCreateFormDialog({
     mutationFn: createNewDeck,
     onSuccess: (variables) => {
       console.log(`New deck create Success, var = ${JSON.stringify(variables)}`)
-      window.alert("[Test] Created!")
+      window.alert("덱 생성이 완료되었습니다.")
       getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
+      removeFile()
       onOpenChangeFn(false)
     },
     onError: (error) => {
@@ -58,6 +59,11 @@ export function DeckCreateFormDialog({
       window.alert(error.message)
     },
   })
+
+  const handleOpenDialog = (isOpen: boolean) => {
+    clearState()
+    onOpenChangeFn(isOpen)
+  }
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -72,6 +78,14 @@ export function DeckCreateFormDialog({
     }
   }
 
+  const clearState = () => {
+    removeFile()
+    setDeckTitle("")
+    setDeckDescription("")
+    setSelectDirectory(0)
+    setSelectCategory(0)
+  }
+
   const submitCreateDeck = () => {
     createDeckMutation.mutate({
       request: {
@@ -83,10 +97,11 @@ export function DeckCreateFormDialog({
       },
       file: file,
     })
+    clearState()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeFn}>
+    <Dialog open={open} onOpenChange={handleOpenDialog}>
       <DialogContent className="sm:max-w-[500px] w-[95%] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
@@ -212,7 +227,10 @@ export function DeckCreateFormDialog({
               type="button"
               variant="destructive"
               className="w-full sm:w-24"
-              onClick={() => onOpenChangeFn(false)}
+              onClick={() => {
+                clearState()
+                onOpenChangeFn(false)
+              }}
             >
               취소
             </Button>
