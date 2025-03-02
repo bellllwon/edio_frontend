@@ -1,4 +1,4 @@
-import { getAccount } from "@/src/account/api"
+import { getAccount, User } from "@/src/account/api"
 import LoginButton from "@/src/account/auth/LoginButton"
 import { getAllFolders } from "@/src/folder/api"
 import {
@@ -9,8 +9,9 @@ import {
 import { getQueryClient } from "@/src/shared/get-query-client"
 import AppSidebarContent from "@/src/template/sidebar/AppSidebarContent"
 import AppSidebarHeader from "@/src/template/sidebar/AppSidebarHeader"
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query"
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 import { cookies } from "next/headers"
+import AccountProfile from "@/src/account/AccountProfile"
 
 export default async function AppSidebar() {
   const queryClient = getQueryClient()
@@ -18,9 +19,11 @@ export default async function AppSidebar() {
 
   if (cookies().get("accessToken")) {
     try {
-      await queryClient.fetchQuery(getAccount())
+      const user: User = await queryClient
+        .fetchQuery(getAccount())
+        .then((data) => data)
       queryClient.prefetchQuery(getAllFolders())
-      footerContent = <div>TODO: user profile component</div>
+      footerContent = <AccountProfile account={user} />
     } catch (err) {
       footerContent = <LoginButton />
     }
