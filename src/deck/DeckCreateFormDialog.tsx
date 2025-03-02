@@ -24,6 +24,9 @@ import { getFoldersAllKey, getMyDirectories } from "@/src/folder/api"
 import { createNewDeck, queryKey } from "@/src/deck/api"
 import { getQueryClient } from "@/src/shared/get-query-client"
 import { Upload, X } from "lucide-react"
+import { ToastAction } from "@/src/shadcn/components/ui/toast"
+import { toast } from "@/src/shadcn/hooks/use-toast"
+import Link from "next/link"
 
 export function DeckCreateFormDialog({
   open,
@@ -49,10 +52,17 @@ export function DeckCreateFormDialog({
     mutationFn: createNewDeck,
     onSuccess: (variables) => {
       console.log(`New deck create Success, var = ${JSON.stringify(variables)}`)
-      window.alert("덱 생성이 완료되었습니다.")
       getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
       removeFile()
       onOpenChangeFn(false)
+      toast({
+        title: `${deckTitle} Deck created!`,
+        action: (
+          <ToastAction altText="Try again" asChild>
+            <Link href={`/deck/${variables.id}/edit`}>Add card</Link>
+          </ToastAction>
+        ),
+      })
     },
     onError: (error) => {
       console.log(`Failed create deck, cause = ${error}`)
@@ -97,7 +107,6 @@ export function DeckCreateFormDialog({
       },
       file: file,
     })
-    clearState()
   }
 
   return (
