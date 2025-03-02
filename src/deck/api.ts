@@ -2,6 +2,10 @@ import { getFetch, postFetch } from "@/src/shared/util/data/fetcher"
 import { queryOptions } from "@tanstack/react-query"
 
 export const REQ_DECK = "/api/deck"
+export type DeckCreateWithFileReq = {
+  request: DeckCreateReq
+  file?: File | null
+}
 export const GET_DECK = "/api/deck"
 export type DeckCreateReq = {
   folderId: number
@@ -23,12 +27,14 @@ export type DeckDetail = Deck & {
 
 export const queryKey = [REQ_DECK]
 
-export function createNewDeck(createRequest: DeckCreateReq): Promise<Deck> {
+export function createNewDeck(
+  createRequest: DeckCreateWithFileReq,
+): Promise<Deck> {
   const formData = new FormData()
-  const jsonBlob = new Blob([JSON.stringify(createRequest)], {
-    type: "application/json",
-  })
-  formData.append("request", jsonBlob)
+
+  formData.append("request", JSON.stringify(createRequest.request))
+  formData.append("file", createRequest.file!)
+
   return postFetch(REQ_DECK, formData)
 }
 
