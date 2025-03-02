@@ -2,18 +2,25 @@ import { getFetch } from "@/src/shared/util/data/fetcher"
 import { queryOptions } from "@tanstack/react-query"
 
 export const GET_ACCOUNT = "/api/account"
+export type Member = {
+  id: number
+  email: string
+  name: string
+  givenName: string
+  familyName: string
+  profileUrl: string
+  createdAt: string
+  updateAt: string
+}
 export type User = {
-  id: string
-  rootFolderId: string
+  id: number
+  loginId: string
+  rootFolderId: number
   roles: string
-  memberResponse: {
-    id: string
-    email: string
-    name: string
-    profileUrl: string
-  }
+  memberResponse: Member
 }
 export const queryKey = [GET_ACCOUNT]
+
 export function getAccount() {
   return queryOptions({
     queryKey,
