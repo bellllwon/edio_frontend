@@ -87,7 +87,15 @@ const handlers = [
     ])
   }),
   http.post(`${process.env.NEXT_PUBLIC_MSW_URL}${DECK}`, () => {
-    return HttpResponse.json({})
+    return HttpResponse.json({
+      id: 1,
+      folderId: 1,
+      categoryId: 1,
+      name: `deck name`,
+      description: "sample",
+      isShared: false,
+      isFavorite: false,
+    })
   }),
 
   http.get(`${process.env.NEXT_PUBLIC_MSW_URL}${GET_FOLDERS_ALL}`, () => {
@@ -141,6 +149,9 @@ const handlers = [
     })
   }),
   http.post(`${process.env.NEXT_PUBLIC_MSW_URL}${POST_CARDS}`, async ({}) => {
+    return new HttpResponse(null, { status: 200 })
+  }),
+  http.patch(`${process.env.NEXT_PUBLIC_MSW_URL}${DECK}`, () => {
     return new HttpResponse(null, { status: 200 })
   }),
 ]

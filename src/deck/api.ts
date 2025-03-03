@@ -1,4 +1,4 @@
-import { getFetch, postFetch } from "@/src/shared/util/data/fetcher"
+import { formFetch, getFetch } from "@/src/shared/util/data/fetcher"
 import { queryOptions } from "@tanstack/react-query"
 
 export const REQ_DECK = "/api/deck"
@@ -38,7 +38,20 @@ export function createNewDeck(
   formData.append("request", JSON.stringify(createRequest.request))
   formData.append("file", createRequest.file!)
 
-  return postFetch(REQ_DECK, formData)
+  return formFetch(REQ_DECK, formData, {
+    method: "POST",
+  })
+}
+
+export function updateDeck(updateRequest: DeckEditWithFileReq): Promise<void> {
+  const formData = new FormData()
+
+  formData.append("request", JSON.stringify(updateRequest.request))
+  formData.append("file", updateRequest.file!)
+
+  return formFetch(REQ_DECK, formData, {
+    method: "PATCH",
+  })
 }
 
 export function getDeckDetail(deckId: number) {

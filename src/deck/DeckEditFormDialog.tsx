@@ -21,7 +21,7 @@ import { ChangeEvent, useRef, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/src/category/api"
 import { getFoldersAllKey, getMyDirectories } from "@/src/folder/api"
-import { createNewDeck, Deck, queryKey } from "@/src/deck/api"
+import { createNewDeck, Deck, queryKey, updateDeck } from "@/src/deck/api"
 import { Upload, X } from "lucide-react"
 import { getQueryClient } from "@/src/shared/get-query-client"
 import { toast } from "@/src/shadcn/hooks/use-toast"
@@ -81,6 +81,29 @@ export function DeckEditFormDialog({
     },
   })
 
+  const updateDeckMutation = useMutation({
+    mutationKey: ["updateDeck"],
+    mutationFn: updateDeck,
+    onSuccess: () => {
+      console.log(`Updated Deck, deckId = ${deck?.id}`)
+      getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
+      removeFile()
+      onOpenChangeFn(false)
+      toast({
+        title: `${deckTitle} Deck Updated!`,
+        action: (
+          <ToastAction altText="Try again" asChild>
+            <Link href={`/deck/${deck?.id}/edit`}>Add card</Link>
+          </ToastAction>
+        ),
+      })
+    },
+    onError: (error) => {
+      console.log(`Failed update deck, cause = ${error}`)
+      window.alert(error.message)
+    },
+  })
+
   const handleOpenDialog = (isOpen: boolean) => {
     clearState()
     onOpenChangeFn(isOpen)
@@ -108,19 +131,26 @@ export function DeckEditFormDialog({
   }
 
   const handleSubmitEvent = () => {
+    const editRequest = {
+      request: {
+        folderId: selectDirectoryId,
+        categoryId: selectCategoryId,
+        name: deckTitle,
+        description: deckDescription,
+        isShared: false,
+      },
+      file: file,
+    }
     if (deck == null) {
-      createDeckMutation.mutate({
-        request: {
-          folderId: selectDirectoryId,
-          categoryId: selectCategoryId,
-          name: deckTitle,
-          description: deckDescription,
-          isShared: false,
-        },
-        file: file,
-      })
+      createDeckMutation.mutate(editRequest)
     } else {
-      // TODO PATCH API 추가하기
+      updateDeckMutation.mutate({
+        request: {
+          id: deck.id,
+          ...editRequest.request,
+        },
+        file: editRequest.file,
+      })
     }
   }
 
