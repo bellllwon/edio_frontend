@@ -101,10 +101,10 @@ export function DeckEditFormDialog({
 
   const clearState = () => {
     removeFile()
-    setDeckTitle("")
-    setDeckDescription("")
-    setSelectDirectory(0)
-    setSelectCategory(0)
+    setDeckTitle(deck == null ? "" : deck.name)
+    setDeckDescription(deck == null ? "" : deck.description)
+    setSelectDirectory(deck == null ? 0 : deck.folderId)
+    setSelectCategory(deck == null ? 0 : deck.categoryId)
   }
 
   const handleSubmitEvent = () => {
