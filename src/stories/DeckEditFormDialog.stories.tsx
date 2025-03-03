@@ -19,3 +19,21 @@ export const CreateForm: Story = {
     },
   },
 }
+
+export const UpdateForm: Story = {
+  args: {
+    deck: {
+      id: 1,
+      folderId: 1,
+      categoryId: 1,
+      name: "deck name",
+      description: "sample",
+      isShared: false,
+      isFavorite: false,
+    },
+    open: true,
+    onOpenChangeFn: (open: boolean) => {
+      action("onOpenChangeFn")("Open Or Close!")
+    },
+  },
+}

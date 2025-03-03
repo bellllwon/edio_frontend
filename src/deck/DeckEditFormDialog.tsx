@@ -36,8 +36,10 @@ export function DeckEditFormDialog({
   const { data: categories = [] } = useQuery(getCategories())
   const { data: directories = [] } = useQuery(getMyDirectories())
 
-  const [deckTitle, setDeckTitle] = useState("")
-  const [deckDescription, setDeckDescription] = useState("")
+  const [deckTitle, setDeckTitle] = useState(deck == null ? "" : deck.name)
+  const [deckDescription, setDeckDescription] = useState(
+    deck == null ? "" : deck.description,
+  )
   const [selectCategoryId, setSelectCategory] = useState(
     deck == null
       ? categories.length > 0
@@ -137,6 +139,7 @@ export function DeckEditFormDialog({
               onValueChange={(value) =>
                 setSelectDirectory(Number.parseInt(value))
               }
+              value={deck == null ? "" : deck.folderId.toString()}
             >
               <SelectTrigger id="folder" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -159,6 +162,7 @@ export function DeckEditFormDialog({
               onValueChange={(value) =>
                 setSelectCategory(Number.parseInt(value))
               }
+              value={deck == null ? "" : deck.categoryId.toString()}
             >
               <SelectTrigger id="category" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -189,7 +193,7 @@ export function DeckEditFormDialog({
               placeholder="EX) 기초 영어 단어 500개 공부"
               rows={4}
               className="min-h-[44px]"
-              content={deckDescription}
+              value={deckDescription}
               onChange={(e) => setDeckDescription(e.target.value)}
             />
           </div>
