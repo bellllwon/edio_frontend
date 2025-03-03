@@ -2,12 +2,13 @@ import { getFetch, postFetch } from "@/src/shared/util/data/fetcher"
 import { queryOptions } from "@tanstack/react-query"
 
 export const REQ_DECK = "/api/deck"
-export type DeckCreateWithFileReq = {
-  request: DeckCreateReq
+export type DeckEditWithFileReq = {
+  request: DeckEditReq
   file?: File | null
 }
 export const GET_DECK = "/api/deck"
-export type DeckCreateReq = {
+export type DeckEditReq = {
+  id?: number | null
   folderId: number
   categoryId: number
   name: string
@@ -16,6 +17,8 @@ export type DeckCreateReq = {
 }
 export type Deck = {
   id: number
+  folderId: number
+  categoryId: number
   name: string
   description: string
   isShared: boolean
@@ -28,7 +31,7 @@ export type DeckDetail = Deck & {
 export const queryKey = [REQ_DECK]
 
 export function createNewDeck(
-  createRequest: DeckCreateWithFileReq,
+  createRequest: DeckEditWithFileReq,
 ): Promise<Deck> {
   const formData = new FormData()
 

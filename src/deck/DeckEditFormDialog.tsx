@@ -21,27 +21,36 @@ import { ChangeEvent, useRef, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/src/category/api"
 import { getFoldersAllKey, getMyDirectories } from "@/src/folder/api"
-import { createNewDeck, queryKey } from "@/src/deck/api"
-import { getQueryClient } from "@/src/shared/get-query-client"
+import { createNewDeck, Deck, queryKey } from "@/src/deck/api"
 import { Upload, X } from "lucide-react"
-import { ToastAction } from "@/src/shadcn/components/ui/toast"
+import { getQueryClient } from "@/src/shared/get-query-client"
 import { toast } from "@/src/shadcn/hooks/use-toast"
+import { ToastAction } from "@/src/shadcn/components/ui/toast"
 import Link from "next/link"
 
-export function DeckCreateFormDialog({
+export function DeckEditFormDialog({
+  deck = null,
   open,
   onOpenChangeFn,
-}: DeckCreateFormDialogProps) {
+}: DeckEditFormDialog) {
   const { data: categories = [] } = useQuery(getCategories())
   const { data: directories = [] } = useQuery(getMyDirectories())
 
   const [deckTitle, setDeckTitle] = useState("")
   const [deckDescription, setDeckDescription] = useState("")
   const [selectCategoryId, setSelectCategory] = useState(
-    categories.length > 0 ? categories[0].id : 0,
+    deck == null
+      ? categories.length > 0
+        ? categories[0].id
+        : 0
+      : deck.categoryId,
   )
   const [selectDirectoryId, setSelectDirectory] = useState(
-    directories.length > 0 ? directories[0].id : 0,
+    deck == null
+      ? directories.length > 0
+        ? directories[0].id
+        : 0
+      : deck.folderId,
   )
   const [file, setFile] = useState<File | null>(null)
 
@@ -96,17 +105,21 @@ export function DeckCreateFormDialog({
     setSelectCategory(0)
   }
 
-  const submitCreateDeck = () => {
-    createDeckMutation.mutate({
-      request: {
-        folderId: selectDirectoryId,
-        categoryId: selectCategoryId,
-        name: deckTitle,
-        description: deckDescription,
-        isShared: false,
-      },
-      file: file,
-    })
+  const handleSubmitEvent = () => {
+    if (deck == null) {
+      createDeckMutation.mutate({
+        request: {
+          folderId: selectDirectoryId,
+          categoryId: selectCategoryId,
+          name: deckTitle,
+          description: deckDescription,
+          isShared: false,
+        },
+        file: file,
+      })
+    } else {
+      // TODO PATCH API 추가하기
+    }
   }
 
   return (
@@ -114,7 +127,7 @@ export function DeckCreateFormDialog({
       <DialogContent className="sm:max-w-[500px] w-[95%] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            덱 생성하기
+            {deck == null ? "덱 생성하기" : "덱 수정하기"}
           </DialogTitle>
         </DialogHeader>
         <form className="grid gap-4 py-2 sm:gap-6 sm:py-4">
@@ -228,9 +241,9 @@ export function DeckCreateFormDialog({
             <Button
               type="button"
               className="w-full sm:w-24"
-              onClick={submitCreateDeck}
+              onClick={handleSubmitEvent}
             >
-              생성
+              {deck == null ? "생성" : "수정"}
             </Button>
             <Button
               type="button"
@@ -250,7 +263,8 @@ export function DeckCreateFormDialog({
   )
 }
 
-interface DeckCreateFormDialogProps {
+export interface DeckEditFormDialog {
+  deck?: Deck | null
   open: boolean
   onOpenChangeFn: (open: boolean) => void
 }

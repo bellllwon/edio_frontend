@@ -109,6 +109,8 @@ const handlers = [
     const createDeck = (): Deck => {
       return {
         id: id++,
+        folderId: id,
+        categoryId: 1,
         name: `deck name ${id}`,
         description: "sample",
         isShared: false,
@@ -129,6 +131,8 @@ const handlers = [
     })
     return HttpResponse.json({
       id: 1,
+      folderId: 1,
+      categoryId: 1,
       name: "deck name",
       description: "sample",
       isShared: false,
