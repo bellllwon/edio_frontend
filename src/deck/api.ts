@@ -8,7 +8,7 @@ export type DeckEditWithFileReq = {
 }
 export const GET_DECK = "/api/deck"
 export type DeckEditReq = {
-  id?: number | null
+  id?: number
   folderId: number
   categoryId: number
   name: string

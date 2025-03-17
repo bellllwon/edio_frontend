@@ -29,30 +29,22 @@ import { ToastAction } from "@/src/shadcn/components/ui/toast"
 import Link from "next/link"
 
 export function DeckEditFormDialog({
-  deck = null,
+  deck,
   open,
   onOpenChangeFn,
 }: DeckEditFormDialog) {
   const { data: categories = [] } = useQuery(getCategories())
   const { data: directories = [] } = useQuery(getMyDirectories())
 
-  const [deckTitle, setDeckTitle] = useState(deck == null ? "" : deck.name)
+  const [deckTitle, setDeckTitle] = useState(deck?.name ?? "")
   const [deckDescription, setDeckDescription] = useState(
-    deck == null ? "" : deck.description,
+    deck?.description ?? "",
   )
   const [selectCategoryId, setSelectCategory] = useState(
-    deck == null
-      ? categories.length > 0
-        ? categories[0].id
-        : 0
-      : deck.categoryId,
+    deck?.categoryId ?? categories[0]?.id ?? 0,
   )
   const [selectDirectoryId, setSelectDirectory] = useState(
-    deck == null
-      ? directories.length > 0
-        ? directories[0].id
-        : 0
-      : deck.folderId,
+    deck?.folderId ?? directories[0]?.id ?? 0,
   )
   const [file, setFile] = useState<File | null>(null)
 
@@ -298,7 +290,7 @@ export function DeckEditFormDialog({
 }
 
 export interface DeckEditFormDialog {
-  deck?: Deck | null
+  deck?: Deck
   open: boolean
   onOpenChangeFn: (open: boolean) => void
 }
