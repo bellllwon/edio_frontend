@@ -27,12 +27,11 @@ import { getQueryClient } from "@/src/shared/get-query-client"
 import { toast } from "@/src/shadcn/hooks/use-toast"
 import { ToastAction } from "@/src/shadcn/components/ui/toast"
 import Link from "next/link"
+import { DialogTrigger } from "@radix-ui/react-dialog"
 
-export function DeckEditFormDialog({
-  deck,
-  open,
-  onOpenChangeFn,
-}: DeckEditFormDialog) {
+export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
+  const [open, setOpen] = useState(false)
+
   const { data: categories = [] } = useQuery(getCategories())
   const { data: directories = [] } = useQuery(getMyDirectories())
 
@@ -57,7 +56,7 @@ export function DeckEditFormDialog({
       console.log(`New deck create Success, var = ${JSON.stringify(variables)}`)
       getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
       removeFile()
-      onOpenChangeFn(false)
+      setOpen(false)
       toast({
         title: `${deckTitle} Deck created!`,
         action: (
@@ -80,7 +79,7 @@ export function DeckEditFormDialog({
       console.log(`Updated Deck, deckId = ${deck?.id}`)
       getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
       removeFile()
-      onOpenChangeFn(false)
+      setOpen(false)
       toast({
         title: `${deckTitle} Deck Updated!`,
         action: (
@@ -98,7 +97,7 @@ export function DeckEditFormDialog({
 
   const handleOpenDialog = (isOpen: boolean) => {
     clearState()
-    onOpenChangeFn(isOpen)
+    setOpen(isOpen)
   }
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -148,6 +147,7 @@ export function DeckEditFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenDialog}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px] w-[95%] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
@@ -276,8 +276,7 @@ export function DeckEditFormDialog({
               variant="destructive"
               className="w-full sm:w-24"
               onClick={() => {
-                clearState()
-                onOpenChangeFn(false)
+                handleOpenDialog(false)
               }}
             >
               취소
@@ -291,6 +290,5 @@ export function DeckEditFormDialog({
 
 export interface DeckEditFormDialog {
   deck?: Deck
-  open: boolean
-  onOpenChangeFn: (open: boolean) => void
+  children: React.ReactNode
 }

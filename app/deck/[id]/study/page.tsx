@@ -1,6 +1,7 @@
 import { getQueryClient } from "@/src/shared/get-query-client"
 import { DeckDetail, getDeckDetail } from "@/src/deck/api"
-import DeckUpdateButton from "@/src/deck/DeckUpdateButton"
+import { Button } from "@/src/shadcn/components/ui/button"
+import { DeckEditFormDialog } from "@/src/deck/DeckEditFormDialog"
 
 export default async function page({ params }: { params: { id: number } }) {
   const queryClient = getQueryClient()
@@ -12,7 +13,11 @@ export default async function page({ params }: { params: { id: number } }) {
   }
   return (
     <>
-      {deckDetail !== undefined && <DeckUpdateButton deck={deckDetail} />}
+      {deckDetail !== undefined && (
+        <DeckEditFormDialog deck={deckDetail}>
+          <Button>덱 수정</Button>
+        </DeckEditFormDialog>
+      )}
       <div>TODO: 덱 학습하기 화면 {params.id} </div>
     </>
   )

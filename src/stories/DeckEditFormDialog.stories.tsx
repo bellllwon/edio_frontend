@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react"
 import { DeckEditFormDialog } from "@/src/deck/DeckEditFormDialog"
-import { action } from "@storybook/addon-actions"
 
 const meta = {
   title: "deck/DeckEditFormDialog",
@@ -13,10 +12,7 @@ type Story = StoryObj<typeof DeckEditFormDialog>
 
 export const CreateForm: Story = {
   args: {
-    open: true,
-    onOpenChangeFn: (open: boolean) => {
-      action("onOpenChangeFn")("Open Or Close!")
-    },
+    children: <div>생성 클릭</div>,
   },
 }
 
@@ -31,9 +27,6 @@ export const UpdateForm: Story = {
       isShared: false,
       isFavorite: false,
     },
-    open: true,
-    onOpenChangeFn: (open: boolean) => {
-      action("onOpenChangeFn")("Open Or Close!")
-    },
+    children: <div>수정 클릭</div>,
   },
 }
