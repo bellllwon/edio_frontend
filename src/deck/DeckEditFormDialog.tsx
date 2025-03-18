@@ -45,7 +45,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
   const [selectDirectoryId, setSelectDirectory] = useState(
     deck?.folderId ?? directories[0]?.id ?? 0,
   )
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File>()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -107,7 +107,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
   }
 
   const removeFile = () => {
-    setFile(null)
+    setFile(undefined)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -115,10 +115,10 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
 
   const clearState = () => {
     removeFile()
-    setDeckTitle(deck == null ? "" : deck.name)
-    setDeckDescription(deck == null ? "" : deck.description)
-    setSelectDirectory(deck == null ? 0 : deck.folderId)
-    setSelectCategory(deck == null ? 0 : deck.categoryId)
+    setDeckTitle(deck?.name ?? "")
+    setDeckDescription(deck?.description ?? "")
+    setSelectDirectory(deck?.folderId ?? 0)
+    setSelectCategory(deck?.categoryId ?? 0)
   }
 
   const handleSubmitEvent = () => {
@@ -151,7 +151,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
       <DialogContent className="sm:max-w-[500px] w-[95%] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            {deck == null ? "덱 생성하기" : "덱 수정하기"}
+            {deck === undefined ? "덱 생성하기" : "덱 수정하기"}
           </DialogTitle>
         </DialogHeader>
         <form className="grid gap-4 py-2 sm:gap-6 sm:py-4">
@@ -161,7 +161,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
               onValueChange={(value) =>
                 setSelectDirectory(Number.parseInt(value))
               }
-              value={deck == null ? "" : deck.folderId.toString()}
+              value={deck?.folderId.toString() ?? ""}
             >
               <SelectTrigger id="folder" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -184,7 +184,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
               onValueChange={(value) =>
                 setSelectCategory(Number.parseInt(value))
               }
-              value={deck == null ? "" : deck.categoryId.toString()}
+              value={deck?.categoryId.toString() ?? ""}
             >
               <SelectTrigger id="category" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -269,7 +269,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
               className="w-full sm:w-24"
               onClick={handleSubmitEvent}
             >
-              {deck == null ? "생성" : "수정"}
+              {deck === undefined ? "생성" : "수정"}
             </Button>
             <Button
               type="button"

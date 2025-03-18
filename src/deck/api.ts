@@ -36,7 +36,9 @@ export function createNewDeck(
   const formData = new FormData()
 
   formData.append("request", JSON.stringify(createRequest.request))
-  formData.append("file", createRequest.file!)
+  if (createRequest.file !== undefined) {
+    formData.append("file", createRequest.file!)
+  }
 
   return formFetch(REQ_DECK, formData, {
     method: "POST",
