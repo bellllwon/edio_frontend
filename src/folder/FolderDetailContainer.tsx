@@ -93,11 +93,57 @@ const folderDetails: Folder[] = [
       },
     ],
   },
+  {
+    id: 4,
+    name: "Dir 4",
+    subFolders: [
+      {
+        id: 5,
+        name: "Dir 5",
+        subFolders: [],
+        decks: [
+          {
+            id: 12,
+            name: "Deck 12",
+            description: "ttt",
+            isShared: false,
+            isFavorite: false,
+          },
+        ],
+      },
+    ],
+    decks: [
+      {
+        id: 11,
+        name: "Deck 11",
+        description: "ttt",
+        isShared: false,
+        isFavorite: false,
+      },
+    ],
+  },
 ]
+
+function flatFolders(folders: Folder[], flattedFolders: Folder[]): void {
+  folders.forEach((folder) => {
+    flattedFolders.push(folder)
+    if (folder.subFolders.length > 0) {
+      let subFolders: Folder[] = folder.subFolders.map((sub) => {
+        sub.name = `${folder.name} / ${sub.name}`
+        return sub
+      })
+      flatFolders(subFolders, flattedFolders)
+    }
+  })
+}
+
 export default function FolderDetailContainer() {
+  const flattedFolder: Folder[] = []
+  flatFolders(folderDetails, flattedFolder)
+
   return (
     <div className="relative overflow-x-hidden p-12">
-      {folderDetails.map((folderDetail) => (
+      {flattedFolder.map((folderDetail) => (
         <FolderDetailSection
           key={folderDetail.id}
           folderDetail={folderDetail}
