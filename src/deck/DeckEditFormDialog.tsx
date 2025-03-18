@@ -132,7 +132,7 @@ export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
       },
       file: file,
     }
-    if (deck == null) {
+    if (deck === undefined) {
       createDeckMutation.mutate(editRequest)
     } else {
       updateDeckMutation.mutate({
