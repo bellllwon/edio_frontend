@@ -13,6 +13,7 @@ import SvgCommunity from "@/src/shared/icons/SvgCommunity"
 import SvgHome from "@/src/shared/icons/SvgHome"
 import SvgSearch from "@/src/shared/icons/SvgSearch"
 import SvgWorkspace from "@/src/shared/icons/SvgWorkspace"
+import { DeckEditFormDialog } from "@/src/deck/DeckEditFormDialog"
 
 export default function AppSidebarHeader() {
   return (
@@ -29,11 +30,13 @@ export default function AppSidebarHeader() {
             <TooltipContent side="bottom">Search</TooltipContent>
           </Tooltip>
           <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant={"ghost"} size={"icon"}>
-                <SvgAddDeck />
-              </Button>
-            </TooltipTrigger>
+            <DeckEditFormDialog>
+              <TooltipTrigger asChild>
+                <Button variant={"ghost"} size={"icon"}>
+                  <SvgAddDeck />
+                </Button>
+              </TooltipTrigger>
+            </DeckEditFormDialog>
             <TooltipContent side="bottom">Add Deck</TooltipContent>
           </Tooltip>
           <Tooltip>
