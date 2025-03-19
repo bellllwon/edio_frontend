@@ -1,14 +1,14 @@
 import { Meta, StoryObj } from "@storybook/react"
-import FolderDetailSection from "@/src/folder/FolderDetailSection"
+import FolderDetailCarousel from "@/src/folder/FolderDetailCarousel"
 
 const meta = {
-  title: "FolderDetailSection",
-  component: FolderDetailSection,
-} satisfies Meta<typeof FolderDetailSection>
+  title: "folder/FolderDetailCarousel",
+  component: FolderDetailCarousel,
+} satisfies Meta<typeof FolderDetailCarousel>
 
 export default meta
 
-type Story = StoryObj<typeof FolderDetailSection>
+type Story = StoryObj<typeof FolderDetailCarousel>
 
 export const OnlyOneDeck: Story = {
   args: {

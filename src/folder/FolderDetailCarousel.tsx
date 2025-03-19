@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, FolderIcon } from "lucide-react"
 import { Card, CardContent, CardTitle } from "@/src/shadcn/components/ui/card"
 
-export default function FolderDetailSection({
+export default function FolderDetailCarousel({
   folderDetail,
 }: FolderDetailSectionProps) {
   const visibleCardSize = 5

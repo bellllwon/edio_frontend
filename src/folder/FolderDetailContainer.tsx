@@ -1,7 +1,7 @@
 "use client"
 
 import { Folder, getAllFolders } from "@/src/folder/api"
-import FolderDetailSection from "@/src/folder/FolderDetailSection"
+import FolderDetailCarousel from "@/src/folder/FolderDetailCarousel"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 
@@ -39,7 +39,7 @@ export default function FolderDetailContainer() {
   return (
     <div className="relative overflow-x-hidden p-12">
       {displayFolders.map((folderDetail) => (
-        <FolderDetailSection
+        <FolderDetailCarousel
           key={folderDetail.id}
           folderDetail={folderDetail}
         />
