@@ -47,12 +47,11 @@ export default function FolderDetailCarousel({
 
     const section = sectionRef.current
     const cardWidth = section.querySelector(".card-item")?.clientWidth || 0
-    const scrollAmount = cardWidth * visibleCardSize
 
     if (direction === "left") {
-      section.scrollBy({ left: -scrollAmount, behavior: "smooth" })
+      section.scrollBy({ left: -cardWidth, behavior: "smooth" })
     } else {
-      section.scrollBy({ left: scrollAmount, behavior: "smooth" })
+      section.scrollBy({ left: cardWidth, behavior: "smooth" })
     }
   }
 
