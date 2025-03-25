@@ -1,4 +1,3 @@
-import { POST_CARDS } from "@/src/card/api"
 import { Deck } from "@/src/deck/api"
 import { Folder, GET_FOLDERS_ALL } from "@/src/folder/api"
 import { http, HttpResponse } from "msw"
@@ -9,7 +8,7 @@ const LOGIN = "/oauth2/authorization/google"
 const GET_CATEGORIES = "/api/category"
 const GET_MY_DIRECTORIES = "/api/folder/my-folders"
 const DECK = "/api/deck"
-
+const CARDS = "/api/cards"
 export const completedApi: {
   [key: string]: Method[]
 } = {
@@ -19,7 +18,7 @@ export const completedApi: {
   [GET_MY_DIRECTORIES]: ["GET"],
   [DECK]: ["POST", "GET"],
   [GET_FOLDERS_ALL]: ["GET"],
-  [POST_CARDS]: ["POST"],
+  [CARDS]: ["POST", "DELETE"],
 }
 
 const handlers = [
@@ -87,7 +86,15 @@ const handlers = [
     ])
   }),
   http.post(`${process.env.NEXT_PUBLIC_MSW_URL}${DECK}`, () => {
-    return HttpResponse.json({})
+    return HttpResponse.json({
+      id: 1,
+      folderId: 1,
+      categoryId: 1,
+      name: `deck name`,
+      description: "sample",
+      isShared: false,
+      isFavorite: false,
+    })
   }),
 
   http.get(`${process.env.NEXT_PUBLIC_MSW_URL}${GET_FOLDERS_ALL}`, () => {
@@ -109,6 +116,8 @@ const handlers = [
     const createDeck = (): Deck => {
       return {
         id: id++,
+        folderId: id,
+        categoryId: 1,
         name: `deck name ${id}`,
         description: "sample",
         isShared: false,
@@ -129,6 +138,8 @@ const handlers = [
     })
     return HttpResponse.json({
       id: 1,
+      folderId: 1,
+      categoryId: 1,
       name: "deck name",
       description: "sample",
       isShared: false,
@@ -136,7 +147,10 @@ const handlers = [
       cards: new Array(10).fill(0).map((_, i) => generateCard(i)),
     })
   }),
-  http.post(`${process.env.NEXT_PUBLIC_MSW_URL}${POST_CARDS}`, async ({}) => {
+  http.post(`${process.env.NEXT_PUBLIC_MSW_URL}${CARDS}`, async ({}) => {
+    return new HttpResponse(null, { status: 200 })
+  }),
+  http.patch(`${process.env.NEXT_PUBLIC_MSW_URL}${DECK}`, () => {
     return new HttpResponse(null, { status: 200 })
   }),
 ]

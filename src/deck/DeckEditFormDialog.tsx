@@ -6,6 +6,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/src/shadcn/components/ui/dialog"
 import {
   Select,
@@ -21,29 +22,30 @@ import { ChangeEvent, useRef, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { getCategories } from "@/src/category/api"
 import { getFoldersAllKey, getMyDirectories } from "@/src/folder/api"
-import { createNewDeck, queryKey } from "@/src/deck/api"
-import { getQueryClient } from "@/src/shared/get-query-client"
+import { createNewDeck, Deck, queryKey, updateDeck } from "@/src/deck/api"
 import { Upload, X } from "lucide-react"
-import { ToastAction } from "@/src/shadcn/components/ui/toast"
+import { getQueryClient } from "@/src/shared/get-query-client"
 import { toast } from "@/src/shadcn/hooks/use-toast"
+import { ToastAction } from "@/src/shadcn/components/ui/toast"
 import Link from "next/link"
 
-export function DeckCreateFormDialog({
-  open,
-  onOpenChangeFn,
-}: DeckCreateFormDialogProps) {
+export function DeckEditFormDialog({ deck, children }: DeckEditFormDialog) {
+  const [open, setOpen] = useState(false)
+
   const { data: categories = [] } = useQuery(getCategories())
   const { data: directories = [] } = useQuery(getMyDirectories())
 
-  const [deckTitle, setDeckTitle] = useState("")
-  const [deckDescription, setDeckDescription] = useState("")
+  const [deckTitle, setDeckTitle] = useState(deck?.name ?? "")
+  const [deckDescription, setDeckDescription] = useState(
+    deck?.description ?? "",
+  )
   const [selectCategoryId, setSelectCategory] = useState(
-    categories.length > 0 ? categories[0].id : 0,
+    deck?.categoryId ?? categories[0]?.id ?? 0,
   )
   const [selectDirectoryId, setSelectDirectory] = useState(
-    directories.length > 0 ? directories[0].id : 0,
+    deck?.folderId ?? directories[0]?.id ?? 0,
   )
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File>()
 
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -54,7 +56,7 @@ export function DeckCreateFormDialog({
       console.log(`New deck create Success, var = ${JSON.stringify(variables)}`)
       getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
       removeFile()
-      onOpenChangeFn(false)
+      setOpen(false)
       toast({
         title: `${deckTitle} Deck created!`,
         action: (
@@ -70,9 +72,32 @@ export function DeckCreateFormDialog({
     },
   })
 
+  const updateDeckMutation = useMutation({
+    mutationKey: ["updateDeck"],
+    mutationFn: updateDeck,
+    onSuccess: () => {
+      console.log(`Updated Deck, deckId = ${deck?.id}`)
+      getQueryClient().invalidateQueries({ queryKey: getFoldersAllKey })
+      removeFile()
+      setOpen(false)
+      toast({
+        title: `${deckTitle} Deck Updated!`,
+        action: (
+          <ToastAction altText="Try again" asChild>
+            <Link href={`/deck/${deck?.id}/edit`}>Add card</Link>
+          </ToastAction>
+        ),
+      })
+    },
+    onError: (error) => {
+      console.log(`Failed update deck, cause = ${error}`)
+      window.alert(error.message)
+    },
+  })
+
   const handleOpenDialog = (isOpen: boolean) => {
     clearState()
-    onOpenChangeFn(isOpen)
+    setOpen(isOpen)
   }
 
   const handleChangeFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +107,7 @@ export function DeckCreateFormDialog({
   }
 
   const removeFile = () => {
-    setFile(null)
+    setFile(undefined)
     if (fileInputRef.current) {
       fileInputRef.current.value = ""
     }
@@ -90,14 +115,14 @@ export function DeckCreateFormDialog({
 
   const clearState = () => {
     removeFile()
-    setDeckTitle("")
-    setDeckDescription("")
-    setSelectDirectory(0)
-    setSelectCategory(0)
+    setDeckTitle(deck?.name ?? "")
+    setDeckDescription(deck?.description ?? "")
+    setSelectDirectory(deck?.folderId ?? 0)
+    setSelectCategory(deck?.categoryId ?? 0)
   }
 
-  const submitCreateDeck = () => {
-    createDeckMutation.mutate({
+  const handleSubmitEvent = () => {
+    const editRequest = {
       request: {
         folderId: selectDirectoryId,
         categoryId: selectCategoryId,
@@ -106,15 +131,27 @@ export function DeckCreateFormDialog({
         isShared: false,
       },
       file: file,
-    })
+    }
+    if (deck === undefined) {
+      createDeckMutation.mutate(editRequest)
+    } else {
+      updateDeckMutation.mutate({
+        request: {
+          id: deck.id,
+          ...editRequest.request,
+        },
+        file: editRequest.file,
+      })
+    }
   }
 
   return (
     <Dialog open={open} onOpenChange={handleOpenDialog}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[500px] w-[95%] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">
-            덱 생성하기
+            {deck === undefined ? "덱 생성하기" : "덱 수정하기"}
           </DialogTitle>
         </DialogHeader>
         <form className="grid gap-4 py-2 sm:gap-6 sm:py-4">
@@ -124,6 +161,7 @@ export function DeckCreateFormDialog({
               onValueChange={(value) =>
                 setSelectDirectory(Number.parseInt(value))
               }
+              defaultValue={deck?.folderId.toString() ?? ""}
             >
               <SelectTrigger id="folder" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -146,6 +184,7 @@ export function DeckCreateFormDialog({
               onValueChange={(value) =>
                 setSelectCategory(Number.parseInt(value))
               }
+              defaultValue={deck?.categoryId.toString() ?? ""}
             >
               <SelectTrigger id="category" className="min-h-[44px]">
                 <SelectValue placeholder="선택" />
@@ -176,7 +215,7 @@ export function DeckCreateFormDialog({
               placeholder="EX) 기초 영어 단어 500개 공부"
               rows={4}
               className="min-h-[44px]"
-              content={deckDescription}
+              value={deckDescription}
               onChange={(e) => setDeckDescription(e.target.value)}
             />
           </div>
@@ -228,17 +267,16 @@ export function DeckCreateFormDialog({
             <Button
               type="button"
               className="w-full sm:w-24"
-              onClick={submitCreateDeck}
+              onClick={handleSubmitEvent}
             >
-              생성
+              {deck === undefined ? "생성" : "수정"}
             </Button>
             <Button
               type="button"
               variant="destructive"
               className="w-full sm:w-24"
               onClick={() => {
-                clearState()
-                onOpenChangeFn(false)
+                handleOpenDialog(false)
               }}
             >
               취소
@@ -250,7 +288,7 @@ export function DeckCreateFormDialog({
   )
 }
 
-interface DeckCreateFormDialogProps {
-  open: boolean
-  onOpenChangeFn: (open: boolean) => void
+export interface DeckEditFormDialog {
+  deck?: Deck
+  children: React.ReactNode
 }
