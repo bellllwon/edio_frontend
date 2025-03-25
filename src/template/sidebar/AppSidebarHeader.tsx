@@ -14,8 +14,14 @@ import SvgHome from "@/src/shared/icons/SvgHome"
 import SvgSearch from "@/src/shared/icons/SvgSearch"
 import SvgWorkspace from "@/src/shared/icons/SvgWorkspace"
 import { DeckEditFormDialog } from "@/src/deck/DeckEditFormDialog"
+import { useRouter } from "next/navigation"
 
 export default function AppSidebarHeader() {
+  const router = useRouter()
+  const goWorkspace = (): void => {
+    router.push("/workspace")
+  }
+
   return (
     <div>
       <div className="text-2xl px-4 py-3">EDIO</div>
@@ -61,7 +67,7 @@ export default function AppSidebarHeader() {
         <Button variant={"ghost"}>
           <SvgHome /> Home
         </Button>
-        <Button variant={"ghost"}>
+        <Button variant={"ghost"} onClick={() => goWorkspace()}>
           <SvgWorkspace /> Workspace
         </Button>
         <Button variant={"ghost"}>
