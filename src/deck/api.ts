@@ -23,6 +23,7 @@ export type Deck = {
   description: string
   isShared: boolean
   isFavorite: boolean
+  imagePath?: string
 }
 export type DeckDetail = Deck & {
   cards: Card[]
