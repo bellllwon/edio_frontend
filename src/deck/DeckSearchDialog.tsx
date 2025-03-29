@@ -110,11 +110,22 @@ export default function DeckSearchDialog({ children }: DeckSearchDialogProps) {
                   onClick={() => handleClickResultData(result.id)}
                 >
                   <div className="flex items-start">
-                    <div className="w-10 h-10 rounded-full bg-sky-100 mr-3 flex items-center justify-center flex-shrink-0">
-                      <span className="text-sky-500 font-medium">
-                        {result.name.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
+                    {result.imagePath ? (
+                      <div
+                        className="w-10 h-10 rounded-full overflow-hidden mr-3 flex-shrink-0"
+                        style={{
+                          backgroundImage: `url(${result.imagePath})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      ></div>
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-sky-100 mr-3 flex items-center justify-center flex-shrink-0">
+                        <span className="text-sky-500 font-medium">
+                          {result.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <h4 className="font-medium text-gray-900 truncate">
