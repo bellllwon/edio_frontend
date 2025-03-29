@@ -3,19 +3,19 @@
 import {ReactNode, useEffect, useRef, useState} from "react"
 import {Deck} from "@/src/deck/api"
 import {useRouter} from "next/navigation"
-import {Folder} from "@/src/folder/api"
-import {Dialog, DialogContent, DialogTrigger} from "@radix-ui/react-dialog"
-import {Search, X} from "lucide-react"
+import {Folder, getAllFolders} from "@/src/folder/api"
+import {Dialog, DialogContent, DialogTrigger,} from "@/src/shadcn/components/ui/dialog"
+import {Search} from "lucide-react"
 import {Input} from "@/src/shadcn/components/ui/input"
 import {Button} from "@/src/shadcn/components/ui/button"
+import {useQuery} from "@tanstack/react-query"
 
 /**
  * 덱 검색 모달
  */
-export default function DeckSearchDialog({
-  rootFolder,
-  children,
-}: DeckSearchDialogProps) {
+export default function DeckSearchDialog({ children }: DeckSearchDialogProps) {
+  const { data } = useQuery(getAllFolders())
+
   const [open, setOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [targetDecks, setTargetDecks] = useState<Deck[]>([])
@@ -36,8 +36,10 @@ export default function DeckSearchDialog({
 
       return decks
     }
-    setTargetDecks(unpackDecks(rootFolder))
-  }, [rootFolder])
+    if (data !== undefined) {
+      setTargetDecks(unpackDecks(data))
+    }
+  }, [data])
 
   // 모달 창 활성화 시 검색 바에 포커싱
   useEffect(() => {
@@ -91,9 +93,7 @@ export default function DeckSearchDialog({
                 size="icon"
                 onClick={() => setSearchQuery("")}
                 className="h-8 w-8"
-              >
-                <X className="h-4 w-4" />
-              </Button>
+              />
             )}
           </div>
         </div>
@@ -139,6 +139,5 @@ export default function DeckSearchDialog({
 }
 
 type DeckSearchDialogProps = {
-  rootFolder: Folder
   children: ReactNode
 }
