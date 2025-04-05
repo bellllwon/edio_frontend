@@ -4,8 +4,8 @@ import {ReactNode, useEffect, useRef, useState} from "react"
 import {Deck} from "@/src/deck/api"
 import {useRouter} from "next/navigation"
 import {Folder, getAllFolders} from "@/src/folder/api"
-import {Dialog, DialogContent, DialogTrigger,} from "@/src/shadcn/components/ui/dialog"
-import {Search} from "lucide-react"
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,} from "@/src/shadcn/components/ui/dialog"
+import {Eraser, Search} from "lucide-react"
 import {Input} from "@/src/shadcn/components/ui/input"
 import {Button} from "@/src/shadcn/components/ui/button"
 import {useQuery} from "@tanstack/react-query"
@@ -75,23 +75,30 @@ export default function DeckSearchDialog({ children }: DeckSearchDialogProps) {
     <Dialog open={open} onOpenChange={handleOpenChangeEvent}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[600px] p-0 gap-0">
+        <DialogHeader className="p-4 border-b">
+          <div className="flex items-center justify-between">
+            <DialogTitle className="text-lg">덱 검색</DialogTitle>
+          </div>
+        </DialogHeader>
         <div className="p-4 border-b">
-          <div className="flex items-center">
+          <div className="flex items-center bg-gray-100 rounded-md px-4 py-2">
             <Search className="h-5 w-5 text-gray-400 mr-2" />
             <Input
               ref={inputRef}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="덱 이름 검색..."
-              className="border-none shadow-none focus-visible:ring-0 flex-1"
+              className="border-none shadow-none focus-visible:ring-0 flex-1 bg-transparent"
             />
             {searchQuery && (
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchQuery("")}
-                className="h-8 w-8"
-              />
+                className="h-7 px-2 text-xs text-gray-500 hover:bg-gray-200"
+              >
+                <Eraser size={12} />
+              </Button>
             )}
           </div>
         </div>
