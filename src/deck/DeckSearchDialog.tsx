@@ -28,11 +28,9 @@ export default function DeckSearchDialog({ children }: DeckSearchDialogProps) {
     const unpackDecks = (folder: Folder): Deck[] => {
       let decks: Deck[] = folder.decks
 
-      if (folder.subFolders.length > 0) {
-        folder.subFolders.forEach((subFolder) => {
-          decks.concat(unpackDecks(subFolder))
-        })
-      }
+      folder.subFolders.forEach((subFolder) => {
+        decks = decks.concat(unpackDecks(subFolder))
+      })
 
       return decks
     }
@@ -60,7 +58,7 @@ export default function DeckSearchDialog({ children }: DeckSearchDialogProps) {
     const query = searchQuery.toLowerCase()
     console.log(`Search Query : ${query}`)
     const results: Deck[] = targetDecks.filter((target) =>
-      target.name.includes(query),
+      target.name.toLowerCase().includes(query),
     )
     setSearchResults(results)
   }, [searchQuery, targetDecks])
