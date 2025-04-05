@@ -1,6 +1,5 @@
 import { Meta, StoryObj } from "@storybook/react"
 import DeckInfoCard from "@/src/deck/DeckInfoCard"
-import { fn } from "@storybook/test"
 
 const meta = {
   title: "deck/DeckInfoCard",
@@ -24,7 +23,6 @@ export const HasImage: Story = {
       imagePath:
         "https://edio-file-bucket.s3.ap-northeast-2.amazonaws.com/image/f3617d4e-1d01-4210-bd22-8d2e6d5724b4_67220033.JPG",
     },
-    buttonAction: fn(),
   },
 }
 
@@ -39,6 +37,5 @@ export const NoImage: Story = {
       isShared: false,
       isFavorite: false,
     },
-    buttonAction: fn(),
   },
 }

@@ -19,6 +19,8 @@ export const OnlyOneDeck: Story = {
       decks: [
         {
           id: 1,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 1",
           description: "ttt",
           isShared: false,
@@ -38,6 +40,8 @@ export const HasThreeDeck: Story = {
       decks: [
         {
           id: 2,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 2",
           description: "ttt",
           isShared: false,
@@ -45,6 +49,8 @@ export const HasThreeDeck: Story = {
         },
         {
           id: 3,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 3",
           description: "ttt",
           isShared: false,
@@ -52,6 +58,8 @@ export const HasThreeDeck: Story = {
         },
         {
           id: 4,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 4",
           description: "ttt",
           isShared: false,
@@ -71,6 +79,8 @@ export const HasMultiDeck: Story = {
       decks: [
         {
           id: 5,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 5",
           description: "ttt",
           isShared: false,
@@ -78,6 +88,8 @@ export const HasMultiDeck: Story = {
         },
         {
           id: 6,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 6",
           description: "ttt",
           isShared: false,
@@ -85,6 +97,8 @@ export const HasMultiDeck: Story = {
         },
         {
           id: 7,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 7",
           description: "ttt",
           isShared: false,
@@ -92,6 +106,8 @@ export const HasMultiDeck: Story = {
         },
         {
           id: 8,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 8",
           description: "ttt",
           isShared: false,
@@ -99,6 +115,8 @@ export const HasMultiDeck: Story = {
         },
         {
           id: 9,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 9",
           description: "ttt",
           isShared: false,
@@ -106,6 +124,8 @@ export const HasMultiDeck: Story = {
         },
         {
           id: 10,
+          folderId: 1,
+          categoryId: 1,
           name: "Deck 10",
           description: "ttt",
           isShared: false,
