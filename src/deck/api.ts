@@ -64,3 +64,10 @@ export function getDeckDetail(deckId: number) {
     staleTime: Infinity,
   })
 }
+
+export function deleteDeck(id: number): Promise<void> {
+  return formFetch(REQ_DECK, JSON.stringify({ id }), {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  })
+}
