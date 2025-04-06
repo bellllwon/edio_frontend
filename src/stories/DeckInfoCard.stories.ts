@@ -18,8 +18,6 @@ export const HasImage: Story = {
       categoryId: 1,
       name: "deck name",
       description: "sample",
-      isShared: false,
-      isFavorite: false,
       imagePath:
         "https://edio-file-bucket.s3.ap-northeast-2.amazonaws.com/image/f3617d4e-1d01-4210-bd22-8d2e6d5724b4_67220033.JPG",
     },
@@ -34,8 +32,6 @@ export const NoImage: Story = {
       categoryId: 1,
       name: "deck name",
       description: "sample",
-      isShared: false,
-      isFavorite: false,
     },
   },
 }
