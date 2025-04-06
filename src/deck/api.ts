@@ -21,8 +21,6 @@ export type Deck = {
   categoryId: number
   name: string
   description: string
-  isShared: boolean
-  isFavorite: boolean
   imagePath?: string
 }
 export type DeckDetail = Deck & {
