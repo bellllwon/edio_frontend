@@ -6,10 +6,11 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
 export default async function page({ params }: { params: { id: number } }) {
   const queryClient = getQueryClient()
   try {
-    await queryClient.fetchQuery({
+    const result = await queryClient.fetchQuery({
       ...getDeckDetail(params.id),
       staleTime: 0,
     })
+    console.log(result)
   } catch (err) {
     console.log(err)
     /// TODO: handle error
