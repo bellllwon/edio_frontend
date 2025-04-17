@@ -14,8 +14,8 @@ import { useParams } from "next/navigation"
 import { useState, MouseEvent } from "react"
 type StudyType = "overview" | "flip" | "flip-reverse"
 export default function StudyPage() {
-  const { id } = useParams<{ id: string }>() as unknown as { id: number }
-  const { data, isFetching, isLoading } = useQuery({
+    const  id = Number(useParams().id)
+    const { data, isFetching, isLoading } = useQuery({
     ...getDeckDetail(id),
     select(data) {
       return isRandom
