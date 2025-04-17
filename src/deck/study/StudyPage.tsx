@@ -15,6 +15,7 @@ import { useState, MouseEvent } from "react"
 type StudyType = "overview" | "flip" | "flip-reverse"
 export default function StudyPage() {
     const  id = Number(useParams().id)
+  const [isRandom, setIsRandom] = useState(true)
     const { data, isFetching, isLoading } = useQuery({
     ...getDeckDetail(id),
     select(data) {
@@ -29,7 +30,6 @@ export default function StudyPage() {
 
   const [cardIndex, setCardIndex] = useState<number>(0)
   const [studyType, setStudyType] = useState<StudyType>()
-  const [isRandom, setIsRandom] = useState(true)
   const cards = data?.cards
   console.log(isFetching, isLoading, data)
   console.log(cards)
