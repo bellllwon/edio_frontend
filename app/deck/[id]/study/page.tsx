@@ -11,6 +11,7 @@ export default async function page({ params }: { params: { id: number } }) {
       staleTime: 0,
     })
   } catch (err) {
+    console.log(err)
     /// TODO: handle error
   }
   return (
